@@ -1,0 +1,17 @@
+<%page expression_filter="h"/>
+<%!
+from openedx.core.djangolib.js_utils import dump_js_escaped_json
+%>
+
+<%page args="course_prices"/>
+
+<%
+dashboard_metadata = {}
+for course in course_prices:
+    course_string = str(course)
+    dashboard_metadata[course_string] = course_prices[course]
+%>
+
+<script type="application/json" id="dashboard-metadata">
+    ${dashboard_metadata | n, dump_js_escaped_json}
+</script>

@@ -22,7 +22,7 @@ from six import text_type, iteritems
 
 import track.views
 from bulk_email.models import BulkEmailFlag, Optout  # pylint: disable=import-error
-from course_modes.models import CourseMode
+from course_modes.models import CourseMode, get_cosmetic_display_price
 from courseware.access import has_access
 from edxmako.shortcuts import render_to_response, render_to_string
 from entitlements.models import CourseEntitlement
@@ -193,6 +193,20 @@ def _create_recent_enrollment_message(course_enrollments, course_modes):  # pyli
                 'course_id': recently_enrolled_courses[0].course_overview.id if enrollments_count == 1 else None
             }
         )
+
+def get_course_prices(enrollments):
+    """
+    Given a list of enrollments return a dict of course ids with their prices.
+
+    Utility function for experimental metadata. See experiments/dashboard_metadata.html.
+
+    :param enrollments:
+    :return: dict of courses: course price for dashboard metadata
+    """
+    course_prices = {}
+    for enrollment in enrollments:
+        course_prices[enrollment.course] = enrollment.course_price
+    return course_prices
 
 
 def get_course_enrollments(user, org_whitelist, org_blacklist):
@@ -861,6 +875,8 @@ def student_dashboard(request):
         'empty_dashboard_message': empty_dashboard_message,
         'recovery_email_message': recovery_email_message,
         'recovery_email_activation_message': recovery_email_activation_message,
+        # The below context is for experiments in dashboard_metadata
+        'course_prices': get_course_prices(course_enrollments)
     }
 
     if ecommerce_service.is_enabled(request.user):
