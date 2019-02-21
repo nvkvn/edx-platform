@@ -107,7 +107,7 @@ class Command(BaseCommand):
         if failure:
             # This will fail a Jenkins job running this command, letting site
             # operators know that there was a problem.
-            raise CommandError("Caching program information failed")
+             sys.exit(1)
 
     def get_site_program_uuids(self, client, site):
         failure = False
