@@ -63,7 +63,6 @@ class Command(BaseCommand):
             new_pathways, new_programs, pathway_processing_failed = self.process_pathways(site, new_pathways,
                                                                                           new_programs)
             new_courses, courses_failed = self.get_courses(new_programs)
-            import pdb; pdb.set_trace() 
 
             failure = any([
                 program_uuids_failed,
@@ -206,14 +205,13 @@ class Command(BaseCommand):
 
     def get_courses(self, programs):
         """
-        Get all courses for the programs. 
+        Get all courses for the programs.
 
         TODO: when course discovery can handle it, use that instead. That will allow us to put all course runs in the cache
         not just the course runs in a program. Therefore, a cache miss would be different from a course not in a program.
         """
         course_runs = {}
         failure = False
-        import pdb; pdb.set_trace() 
 
         for program_uuid, program in programs.items():
             for course in program['courses']:
@@ -224,3 +222,4 @@ class Command(BaseCommand):
                     else:
                         course_runs[course_run_key] = [program_uuid]
         return course_runs, failure
+    
